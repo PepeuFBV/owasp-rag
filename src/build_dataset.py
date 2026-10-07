@@ -8,21 +8,10 @@ from config import PROCESSED_DIR, RAW_DIR, TARGET_DOCUMENTS
 
 
 def clean_markdown(text: str) -> str:
-    # remove images but keep normal link text.
-    text = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", text)
-    text = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", text)
-
-    # remove common Markdown formatting characters.
-    text = re.sub(r"^#{1,6}\s*", "", text, flags=re.MULTILINE)
-    text = re.sub(r"[*_~`>]", "", text)
-
-    # remove HTML tags.
-    text = re.sub(r"<[^>]+>", " ", text)
-
-    # normalize whitespace.
-    text = re.sub(r"[ \t]+", " ", text)
+    # normalize line endings and trailing spaces without changing Markdown, HTML, code, or technical operators.
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = "\n".join(line.rstrip(" \t") for line in text.split("\n"))
     text = re.sub(r"\n{3,}", "\n\n", text)
-
     return text.strip()
 
 
