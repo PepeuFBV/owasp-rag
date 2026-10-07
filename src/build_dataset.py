@@ -1,6 +1,7 @@
 import json
 import re
 import statistics
+import uuid
 from pathlib import Path
 
 from config import PROCESSED_DIR, RAW_DIR, TARGET_DOCUMENTS
@@ -38,6 +39,11 @@ def doc_id_from_filename(path: Path) -> str:
     return f"owasp_{value}"
 
 
+def uuid_from_doc_id(doc_id: str) -> str:
+    """Return a stable UUID for a document across dataset rebuilds."""
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"owasp-rag:{doc_id}"))
+
+
 def main() -> None:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -47,10 +53,12 @@ def main() -> None:
         raw_text = path.read_text(encoding="utf-8")
         text = clean_markdown(raw_text)
         word_count = len(text.split())
+        doc_id = doc_id_from_filename(path)
 
         documents.append(
             {
-                "doc_id": doc_id_from_filename(path),
+                "doc_id": doc_id,
+                "uuid": uuid_from_doc_id(doc_id),
                 "title": title_from_filename(path),
                 "source_file": path.name,
                 "source_url": (
@@ -83,7 +91,7 @@ def main() -> None:
         "language": "en",
         "document_count": len(selected),
         "selection_method": (
-            "25 candidate documents with cleaned word counts closest "
+            f"{TARGET_DOCUMENTS} documents with cleaned word counts closest "
             "to the candidate-pool median"
         ),
         "candidate_median_word_count": median_length,
