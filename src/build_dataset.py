@@ -8,8 +8,7 @@ from config import PROCESSED_DIR, RAW_DIR, TARGET_DOCUMENTS
 
 
 def clean_markdown(text: str) -> str:
-    # Normalize line endings and trailing spaces without changing Markdown,
-    # HTML, code, or technical operators.
+    # normalize line endings and trailing spaces without changing Markdown, HTML, code, or technical operators.
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     text = "\n".join(line.rstrip(" \t") for line in text.split("\n"))
     text = re.sub(r"\n{3,}", "\n\n", text)
