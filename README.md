@@ -34,6 +34,7 @@ Each document contains:
 ```json
 {
   "doc_id": "...",
+  "uuid": "...",
   "title": "...",
   "source_file": "...",
   "source_url": "...",
