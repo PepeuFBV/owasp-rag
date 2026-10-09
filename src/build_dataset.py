@@ -4,7 +4,7 @@ import statistics
 import uuid
 from pathlib import Path
 
-from config import PROCESSED_DIR, RAW_DIR, TARGET_DOCUMENTS
+from config import EXTRACTED_DIR, RAW_DIR, TARGET_DOCUMENTS
 
 
 def clean_markdown(text: str) -> str:
@@ -34,7 +34,7 @@ def uuid_from_doc_id(doc_id: str) -> str:
 
 
 def main() -> None:
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    EXTRACTED_DIR.mkdir(parents=True, exist_ok=True)
 
     documents = []
 
@@ -87,7 +87,7 @@ def main() -> None:
         "documents": selected,
     }
 
-    output_path = PROCESSED_DIR / "documents.json"
+    output_path = EXTRACTED_DIR / "documents.json"
     output_path.write_text(
         json.dumps(dataset, indent=2, ensure_ascii=False),
         encoding="utf-8",
@@ -104,7 +104,7 @@ def main() -> None:
         ),
     }
 
-    stats_path = PROCESSED_DIR / "stats.json"
+    stats_path = EXTRACTED_DIR / "stats.json"
     stats_path.write_text(
         json.dumps(stats, indent=2),
         encoding="utf-8",
