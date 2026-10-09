@@ -7,6 +7,8 @@ Very small starter for the first step of the RAG assignment:
 3. measure document lengths;
 4. select 25 documents closest to the candidate-set median;
 5. save the corpus as JSON.
+6. Chunk the documents into smaller pieces for retrieval.
+7. Save the chunks as JSON.
 
 ## Setup
 
@@ -21,6 +23,7 @@ pip install -r requirements.txt
 ```bash
 python src/download_docs.py
 python src/build_dataset.py
+python src/chunk_documents.py
 ```
 
 The main output is:
