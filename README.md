@@ -26,26 +26,30 @@ python src/build_dataset.py
 python src/chunk_documents.py
 ```
 
-The main output is:
+Outputs are written under `data/processed/`:
 
 ```text
-data/processed/documents.json
+data/processed/
+├── extracted/
+│   ├── documents.json   # selected, cleaned documents (build_dataset.py)
+│   └── stats.json       # document size statistics
+└── chunks/
+    ├── chunks.json      # chunks for retrieval (chunk_documents.py)
+    └── stats.json       # chunk count and size statistics
 ```
 
-Each document contains:
+The main output is `data/processed/chunks/chunks.json`, an array of chunks in the format:
 
 ```json
 {
+  "chunk_id": "...",
   "doc_id": "...",
-  "uuid": "...",
   "title": "...",
-  "source_file": "...",
   "source_url": "...",
-  "word_count": 0,
+  "chunk_index": <int>,
+  "start_word": <int>,
+  "end_word": <int>,
+  "word_count": <int>,
   "text": "..."
 }
 ```
-
-`data/processed/stats.json` contains basic size statistics.
-
-The next step should be chunking `documents.json`; do not add retrieval yet.
