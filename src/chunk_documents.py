@@ -1,12 +1,15 @@
 import json
+import statistics
+from collections import Counter
 
-from config import PROCESSED_DIR
+from config import CHUNKS_DIR, EXTRACTED_DIR
 
 CHUNK_SIZE = 200   # words per chunk
 OVERLAP = 40       # words shared between neighbouring chunks
 
-INPUT_FILE = PROCESSED_DIR / "documents.json"
-OUTPUT_FILE = PROCESSED_DIR / "chunks.json"
+INPUT_FILE = EXTRACTED_DIR / "documents.json"
+OUTPUT_FILE = CHUNKS_DIR / "chunks.json"
+STATS_FILE = CHUNKS_DIR / "stats.json"
 
 
 def chunk_words(words, size, overlap):
@@ -44,11 +47,30 @@ def main():
                 "text": " ".join(window),
             })
 
+    CHUNKS_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(
         json.dumps(chunks, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+    word_counts = [chunk["word_count"] for chunk in chunks]
+    chunks_per_doc = list(Counter(chunk["doc_id"] for chunk in chunks).values())
+    stats = {
+        "chunk_size": CHUNK_SIZE,
+        "overlap": OVERLAP,
+        "documents": len(documents),
+        "chunks": len(chunks),
+        "min_chunks_per_document": min(chunks_per_doc),
+        "max_chunks_per_document": max(chunks_per_doc),
+        "median_chunks_per_document": statistics.median(chunks_per_doc),
+        "min_chunk_word_count": min(word_counts),
+        "max_chunk_word_count": max(word_counts),
+        "median_chunk_word_count": statistics.median(word_counts),
+    }
+    STATS_FILE.write_text(json.dumps(stats, indent=2), encoding="utf-8")
+
     print(f"{len(documents)} documents -> {len(chunks)} chunks")
     print(f"Saved to {OUTPUT_FILE}")
+    print(f"Saved stats to {STATS_FILE}")
 
 
 if __name__ == "__main__":
