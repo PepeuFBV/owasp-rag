@@ -3,6 +3,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 PROCESSED_DIR = ROOT / "data" / "processed"
+EXTRACTED_DIR = PROCESSED_DIR / "extracted"
+CHUNKS_DIR = PROCESSED_DIR / "chunks"
 
 GITHUB_API_URL = (
     "https://api.github.com/repos/OWASP/CheatSheetSeries/contents/cheatsheets"
