@@ -25,7 +25,7 @@ def build_index(chunks):
     return {"chunks": chunks, "vectorizer": vectorizer, "matrix": matrix}
 
 
-def retrieve(question, k=3):
+def retrieve(question, k: object = 3):
     if type(k) is not int or k < 1:
         raise ValueError("k must be a positive integer")
     if not isinstance(question, str) or not question.strip():

@@ -80,7 +80,7 @@ def load_or_generate_embeddings(chunks, model):
     return embeddings
 
 
-def retrieve(question, k=3):
+def retrieve(question, k: object = 3):
     if type(k) is not int or k < 1:
         raise ValueError("k must be a positive integer")
 
