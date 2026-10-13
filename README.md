@@ -72,10 +72,10 @@ the generated corpus):
 
 ```text
 #1  score=0.XXX  SQL Injection Prevention
-    owasp_sql_injection_prevention_c001
+    owasp_sql_injection_prevention_cheat_sheet_c000
     ...retrieved passage excerpt...
 
 #2  score=0.XXX  Query Parameterization
-    owasp_query_parameterization_c000
+    owasp_query_parameterization_cheat_sheet_c000
     ...retrieved passage excerpt...
 ```
