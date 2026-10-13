@@ -1,2 +1,6 @@
+numpy==2.5.4
+einops==0.8.1
 requests==2.32.5
-scikit-learn
+scikit-learn==1.9.1
+sentence-transformers==5.1.2
+transformers==4.57.3
