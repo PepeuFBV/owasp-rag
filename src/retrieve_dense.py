@@ -43,7 +43,7 @@ def corpus_fingerprint(chunks):
 
 def load_or_generate_embeddings(chunks, model):
     fingerprint = corpus_fingerprint(chunks)
-    dimensions = model.get_sentence_embedding_dimension()
+    dimensions = model.get_embedding_dimension()
 
     if CACHE_FILE.exists():
         with np.load(CACHE_FILE, allow_pickle=False) as cached:
