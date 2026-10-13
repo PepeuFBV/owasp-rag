@@ -57,18 +57,13 @@ The main output is `data/processed/chunks/chunks.json`, an array of chunks in th
 
 ## P2: TF-IDF retrieval
 
-The P2 retriever builds a TF-IDF index over the saved chunks and ranks them by
-cosine similarity to a question. Install the dependencies and generate the
-dataset and chunks first, then run a query from the repository root:
+The P2 retriever builds a TF-IDF index over the saved chunks and ranks them by cosine similarity to a question. Install the dependencies and generate the dataset and chunks first, then run a query from the repository root:
 
 ```bash
 python src/retrieve_tfidf.py "How can I prevent SQL injection?" --k 3
 ```
 
-`--k` controls how many results are returned (default: `3`). Each result shows
-its rank, cosine similarity score, title, chunk ID, and a short text excerpt.
-For example, the output has this shape (scores and matching passages depend on
-the generated corpus):
+`--k` controls how many results are returned (default: `3`). Each result shows its rank, cosine similarity score, title, chunk ID, and a short text excerpt. For example, the output has this shape (scores and matching passages depend on the generated corpus):
 
 ```text
 #1  score=0.XXX  SQL Injection Prevention
