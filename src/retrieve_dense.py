@@ -13,7 +13,7 @@ from config import PROCESSED_DIR
 
 CACHE_FILE = PROCESSED_DIR / "embeddings" / "dense_index.npz"
 
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+MODEL_NAME = "sentence-transformers/all-distilroberta-v1"
 
 _INDEX = None
 

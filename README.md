@@ -88,7 +88,7 @@ python src/retrieve_tfidf.py "How can I prevent SQL injection?" --k 3
 
 ## P3: Dense retrieval
 
-The P3 retriever encodes each saved chunk with `sentence-transformers/all-MiniLM-L6-v2` and ranks chunks by cosine similarity to the question. Install the requirements and generate the dataset and chunks as shown above before querying from the repository root:
+The P3 retriever encodes each saved chunk with `sentence-transformers/all-distilroberta-v1` and ranks chunks by cosine similarity to the question. Install the requirements and generate the dataset and chunks as shown above before querying from the repository root:
 
 ```bash
 python src/retrieve_dense.py "How can I prevent SQL injection?" --k 3
@@ -98,7 +98,7 @@ python src/retrieve_dense.py "How can I prevent SQL injection?" --k 3
 
 The first dense query also encodes all chunks and saves the embeddings to `data/processed/embeddings/dense_index.npz`. Later runs reuse that cache when its model name, chunk content fingerprint, and embedding dimensions match the current index. If the corpus or model no longer matches, embeddings are generated again and the cache is replaced.
 
-The model accepts at most 256 tokens per chunk. P1 chunks are split by 200 words, which can produce more than 256 model tokens. Measuring the saved 441 chunks with the model tokenizer found that 388 chunks (87.98%) exceed the limit; the median is 342 tokens and the longest is 896. Across the corpus, 49,798 tokens beyond the per-chunk limit are dropped, with up to 640 tokens dropped from one chunk. The encoder therefore ignores later text in most chunks, which can reduce retrieval of information near their ends. This assessment does not change P1 chunking. Recalculate it after changing the corpus or model with:
+P1 uses 50-word chunks with a 10-word overlap. The model accepts up to 512 tokens per chunk. Measuring the saved 1,750 chunks with the model tokenizer found no chunks over the limit; the median is 75.5 tokens and the longest is 368. Recalculate the truncation analysis after changing the corpus or model with:
 
 ```bash
 python src/analyze_embedding_truncation.py
