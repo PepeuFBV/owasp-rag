@@ -115,7 +115,6 @@ def retrieve(question, k=3):
     ]
 
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Dense semantic retrieval over OWASP chunks"
