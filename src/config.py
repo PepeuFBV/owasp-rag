@@ -5,6 +5,8 @@ RAW_DIR = ROOT / "data" / "raw"
 PROCESSED_DIR = ROOT / "data" / "processed"
 EXTRACTED_DIR = PROCESSED_DIR / "extracted"
 CHUNKS_DIR = PROCESSED_DIR / "chunks"
+QUESTIONS_FILE = ROOT / "data" / "questions.json"
+EXPERIMENT_DIR = ROOT / "output" / "experiment"
 
 GITHUB_API_URL = (
     "https://api.github.com/repos/OWASP/CheatSheetSeries/contents/cheatsheets"

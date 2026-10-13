@@ -8,3 +8,7 @@ __pycache__/
 data/raw/*.md
 data/processed/**/*.json
 data/processed/embeddings/
+
+# downloaded model weights and notebook checkpoints
+.cache/
+.ipynb_checkpoints/
