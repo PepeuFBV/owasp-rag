@@ -9,6 +9,7 @@ Very small starter for the first step of the RAG assignment:
 5. save the corpus as JSON.
 6. Chunk the documents into smaller pieces for retrieval.
 7. Save the chunks as JSON.
+8. Build a TF-IDF index over the chunks and retrieve relevant passages (P2).
 
 ## Setup
 
@@ -17,6 +18,16 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+## Tests
+
+Run the automated tests from the repository root with the project virtual environment active:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The tests cover chunk loading, TF-IDF index construction, retrieval ranking and chunk IDs, and invalid query inputs.
 
 ## Run
 
@@ -52,4 +63,24 @@ The main output is `data/processed/chunks/chunks.json`, an array of chunks in th
   "word_count": <int>,
   "text": "..."
 }
+```
+
+## P2: TF-IDF retrieval
+
+The P2 retriever builds a TF-IDF index over the saved chunks and ranks them by cosine similarity to a question. Install the dependencies and generate the dataset and chunks first, then run a query from the repository root:
+
+```bash
+python src/retrieve_tfidf.py "How can I prevent SQL injection?" --k 3
+```
+
+`--k` controls how many results are returned (default: `3`). Each result shows its rank, cosine similarity score, title, chunk ID, and a short text excerpt. For example, the output has this shape (scores and matching passages depend on the generated corpus):
+
+```text
+#1  score=0.XXX  SQL Injection Prevention
+    owasp_sql_injection_prevention_cheat_sheet_c000
+    ...retrieved passage excerpt...
+
+#2  score=0.XXX  Query Parameterization
+    owasp_query_parameterization_cheat_sheet_c000
+    ...retrieved passage excerpt...
 ```
