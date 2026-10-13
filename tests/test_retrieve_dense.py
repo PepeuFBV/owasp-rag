@@ -78,7 +78,7 @@ class DenseRetrievalTests(unittest.TestCase):
                         retrieve_dense.retrieve(question)
 
     def test_cache_reuse_and_invalidation(self):
-        self.model.get_embedding_dimension.return_value = 2
+        self.model.get_sentence_embedding_dimension.return_value = 2
         self.model.encode.return_value = np.ones(
             (len(self.chunks), 2), dtype=np.float32
         )

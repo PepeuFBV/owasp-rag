@@ -4,8 +4,8 @@ from collections import Counter
 
 from config import CHUNKS_DIR, EXTRACTED_DIR
 
-CHUNK_SIZE = 50    # words per chunk
-OVERLAP = 10       # words shared between neighbouring chunks
+CHUNK_SIZE = 200   # words per chunk
+OVERLAP = 40       # words shared between neighbouring chunks
 
 INPUT_FILE = EXTRACTED_DIR / "documents.json"
 OUTPUT_FILE = CHUNKS_DIR / "chunks.json"

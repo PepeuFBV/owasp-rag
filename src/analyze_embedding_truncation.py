@@ -2,9 +2,7 @@
 
 import statistics
 
-from sentence_transformers import SentenceTransformer
-
-from retrieve_dense import MODEL_NAME
+from retrieve_dense import DOCUMENT_PREFIX, MODEL_NAME, load_model
 from retrieve_tfidf import load_chunks
 
 
@@ -32,7 +30,9 @@ def assess_chunks(chunks, model):
     lengths = [
         len(
             model.tokenizer.encode(
-                chunk["text"], add_special_tokens=True, truncation=False
+                f"{DOCUMENT_PREFIX}{chunk['text']}",
+                add_special_tokens=True,
+                truncation=False,
             )
         )
         for chunk in chunks
@@ -42,7 +42,7 @@ def assess_chunks(chunks, model):
 
 def main():
     chunks = load_chunks()
-    model = SentenceTransformer(MODEL_NAME)
+    model = load_model()
     stats = assess_chunks(chunks, model)
 
     print(f"Model: {MODEL_NAME}")

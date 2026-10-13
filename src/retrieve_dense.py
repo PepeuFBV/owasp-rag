@@ -13,16 +13,25 @@ from config import PROCESSED_DIR
 
 CACHE_FILE = PROCESSED_DIR / "embeddings" / "dense_index.npz"
 
-MODEL_NAME = "sentence-transformers/all-distilroberta-v1"
+MODEL_NAME = "nomic-ai/nomic-embed-text-v1.5"
+MAX_SEQ_LENGTH = 1024
+DOCUMENT_PREFIX = "search_document: "
+QUERY_PREFIX = "search_query: "
 
 _INDEX = None
+
+
+def load_model():
+    model = SentenceTransformer(MODEL_NAME, trust_remote_code=True)
+    model.max_seq_length = MAX_SEQ_LENGTH
+    return model
 
 
 def build_index(chunks):
     if not chunks:
         raise ValueError("Cannot build an index with no chunks")
 
-    model = SentenceTransformer(MODEL_NAME)
+    model = load_model()
     embeddings = load_or_generate_embeddings(chunks, model)
 
     return {
@@ -34,7 +43,7 @@ def build_index(chunks):
 
 def corpus_fingerprint(chunks):
     payload = [
-        [chunk["chunk_id"], chunk["text"]]
+        [chunk["chunk_id"], f"{DOCUMENT_PREFIX}{chunk['text']}"]
         for chunk in chunks
     ]
     content = json.dumps(payload, ensure_ascii=False)
@@ -43,7 +52,7 @@ def corpus_fingerprint(chunks):
 
 def load_or_generate_embeddings(chunks, model):
     fingerprint = corpus_fingerprint(chunks)
-    dimensions = model.get_embedding_dimension()
+    dimensions = model.get_sentence_embedding_dimension()
 
     if CACHE_FILE.exists():
         with np.load(CACHE_FILE, allow_pickle=False) as cached:
@@ -60,7 +69,7 @@ def load_or_generate_embeddings(chunks, model):
     print("[cache] Generating embeddings")
 
     embeddings = model.encode(
-        [chunk["text"] for chunk in chunks],
+        [f"{DOCUMENT_PREFIX}{chunk['text']}" for chunk in chunks],
         batch_size=32,
         convert_to_numpy=True,
         normalize_embeddings=True,
@@ -92,7 +101,7 @@ def retrieve(question, k: object = 3):
         _INDEX = build_index(load_chunks())
 
     query_embedding = _INDEX["model"].encode(
-        [question.strip()],
+        [f"{QUERY_PREFIX}{question.strip()}"],
         convert_to_numpy=True,
         normalize_embeddings=True,
     )
