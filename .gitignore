@@ -7,5 +7,3 @@ __pycache__/
 # data files
 data/raw/*.md
 data/processed/**/*.json
-.venv/
-__pycache__/
