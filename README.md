@@ -19,6 +19,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Tests
+
+Run the automated tests from the repository root with the project virtual environment active:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The tests cover chunk loading, TF-IDF index construction, retrieval ranking and chunk IDs, and invalid query inputs.
+
 ## Run
 
 ```bash
