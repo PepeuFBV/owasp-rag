@@ -7,11 +7,15 @@ import json
 
 import numpy as np
 
+import argparse
+
 from config import PROCESSED_DIR
 
 CACHE_FILE = PROCESSED_DIR / "embeddings" / "dense_index.npz"
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+
+_INDEX = None
 
 
 def build_index(chunks):
@@ -76,13 +80,65 @@ def load_or_generate_embeddings(chunks, model):
     return embeddings
 
 
-def main():
-    chunks = load_chunks()
-    index = build_index(chunks)
+def retrieve(question, k=3):
+    if type(k) is not int or k < 1:
+        raise ValueError("k must be a positive integer")
 
-    print(f"Loaded chunks: {len(chunks)}")
-    print(f"Embeddings shape: {index['embeddings'].shape}")
-    print(f"Model: {MODEL_NAME}")
+    if not isinstance(question, str) or not question.strip():
+        raise ValueError("question must be a non-empty string")
+
+    global _INDEX
+    if _INDEX is None:
+        _INDEX = build_index(load_chunks())
+
+    query_embedding = _INDEX["model"].encode(
+        [question.strip()],
+        convert_to_numpy=True,
+        normalize_embeddings=True,
+    )
+
+    # normalized vectors: dot product equals cosine similarity.
+    scores = _INDEX["embeddings"] @ query_embedding[0]
+    top = np.argsort(-scores)[:k]
+
+    return [
+        {
+            "rank": rank,
+            "chunk_id": _INDEX["chunks"][i]["chunk_id"],
+            "doc_id": _INDEX["chunks"][i]["doc_id"],
+            "title": _INDEX["chunks"][i]["title"],
+            "score": float(scores[i]),
+            "text": _INDEX["chunks"][i]["text"],
+            "source_url": _INDEX["chunks"][i]["source_url"],
+        }
+        for rank, i in enumerate(top, start=1)
+    ]
+
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Dense semantic retrieval over OWASP chunks"
+    )
+    parser.add_argument("question")
+    parser.add_argument("--k", type=int, default=3)
+    args = parser.parse_args()
+
+    try:
+        results = retrieve(args.question, k=args.k)
+    except ValueError as exc:
+        parser.error(str(exc))
+
+    for result in results:
+        excerpt = result["text"][:200].replace("\n", " ")
+
+        print(
+            f"#{result['rank']}  "
+            f"score={result['score']:.3f}  "
+            f"{result['title']}"
+        )
+        print(f"    {result['chunk_id']}")
+        print(f"    {excerpt}...\n")
 
 
 if __name__ == "__main__":
