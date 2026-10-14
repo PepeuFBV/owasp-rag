@@ -1,0 +1,37 @@
+[
+  {
+    "question_id": "q1",
+    "topic": "SQL injection",
+    "question": "According to the OWASP SQL Injection Prevention Cheat Sheet, why do prepared statements prevent SQL injection, and how should dynamic table or column names be handled?",
+    "reference_answer": "Prepared statements separate SQL code from data, so bound values cannot change the query structure. Table and column names generally cannot be bound as parameters; map them to known legal names with an allow-list or redesign the query.",
+    "expected_doc_ids": ["owasp_sql_injection_prevention_cheat_sheet"]
+  },
+  {
+    "question_id": "q2",
+    "topic": "Password storage",
+    "question": "What minimum Argon2id memory, iteration count, and parallelism does the OWASP Password Storage Cheat Sheet recommend in its summary, and which algorithm and parameters are the fallback when Argon2id is unavailable?",
+    "reference_answer": "The summary recommends Argon2id with 19 MiB of memory, 2 iterations, and parallelism 1. If unavailable, use scrypt with N=2^17, r=8, p=1. Other equivalent configurations in the document are not the summary configuration requested here.",
+    "expected_doc_ids": ["owasp_password_storage_cheat_sheet"]
+  },
+  {
+    "question_id": "q3",
+    "topic": "File upload",
+    "question": "According to the OWASP File Upload Cheat Sheet, why are Content-Type and file signature checks insufficient on their own, and where should uploaded files preferably be stored?",
+    "reference_answer": "Content-Type is user-controlled and easily spoofed; file signature checks can also be bypassed and must be combined with other controls. Prefer storage on a separate host, or outside the webroot when separate storage is unavailable.",
+    "expected_doc_ids": ["owasp_file_upload_cheat_sheet"]
+  },
+  {
+    "question_id": "q4",
+    "topic": "SSRF",
+    "question": "According to the OWASP SSRF Prevention Cheat Sheet, why should a web client disable redirects, and which DNS record types and address ranges must be checked before connecting to a user-supplied public domain?",
+    "reference_answer": "Disable redirects to prevent bypassing input validation. Resolve all A and AAAA records, validate IPv4 and IPv6 addresses, and reject private, loopback, link-local and other non-public addresses. Bind the connection to a validated address to prevent DNS rebinding.",
+    "expected_doc_ids": ["owasp_server_side_request_forgery_prevention_cheat_sheet"]
+  },
+  {
+    "question_id": "q5",
+    "topic": "Security logging",
+    "question": "According to the OWASP Logging Cheat Sheet, name at least four categories of sensitive data that should not be logged directly, and explain how event data should be handled to prevent log injection.",
+    "reference_answer": "Do not log passwords, access tokens, session identifiers, encryption keys, sensitive personal data or database connection strings directly. Validate data from other trust zones, sanitize CR, LF and delimiter characters, and encode for the output format. Preserve the security event with safely replaced malformed fields.",
+    "expected_doc_ids": ["owasp_logging_cheat_sheet"]
+  }
+]
